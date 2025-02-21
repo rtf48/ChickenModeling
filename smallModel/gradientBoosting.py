@@ -180,4 +180,7 @@ def fill_csv(name, inputs):
 #evaluate(target_labels_3)
 #evaluate(target_labels_4)
 
-fill_csv('updated_dataset', fatty_acids)
+#evaluate(['Plasma C16:1'])
+
+fill_csv('updated_dataset-fixed', fatty_acids)
+
