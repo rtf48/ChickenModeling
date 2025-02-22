@@ -2,11 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, PolynomialFeatures
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_percentage_error
 import pandas as pd
 import math
 import statistics
+import shap
 
 dataset = pd.read_csv('smallModel/Calculated_Value_Dataset_Updated.csv')
 
@@ -67,11 +68,14 @@ target_labels_4 = ['breast mTOR','breast S6K1','breast 4E-BP1','breast MURF1',
 def train(features, target):
 
     scaler = MinMaxScaler()
+    poly = PolynomialFeatures(degree=2, include_bias=True)
 
     temp = dataset.dropna(subset=target)
     data = temp[features]
     labels = temp[target]
     data = pd.DataFrame(scaler.fit_transform(data), columns=data.columns)
+    ptransform_data = pd.DataFrame(scaler.fit_transform(poly.fit_transform(data)), columns=poly.get_feature_names_out(data.columns))
+    #data = ptransform_data
     data = data.fillna(data.mean())
     #data = data.fillna(0) #Necessary incase an entire column is NaN, but shouldn't affect anything
 
@@ -137,11 +141,15 @@ def train(features, target):
         'Importance': model.feature_importances_
     })
 
-    return metrics, importance
+    explainer = shap.Explainer(model)
+    shap_values = explainer(data_test)
+    shap.plots.beeswarm(shap_values)
+
+    return metrics, importance, shap_values
 
 def evaluate(targets):
     for i in targets:
-        metrics, importance = train(fatty_acids, i)
+        metrics, importance, shap_values = train(fatty_acids, i)
         
         importance.sort_values(by='Importance', ascending=False)
         importance['Rank'] = range(len(importance['Feature']))
@@ -165,7 +173,7 @@ def fill_csv(name, inputs):
     targets = target_labels_1 + target_labels_2 + target_labels_3 + target_labels_4
 
     for label in targets:
-        metrics, importance = train(inputs, label)
+        metrics, importance, shap_values = train(inputs, label)
         importance_frame[label] = importance['Importance']
         metric_frame[label] = metrics['Value']
 
@@ -182,5 +190,5 @@ def fill_csv(name, inputs):
 
 #evaluate(['Plasma C16:1'])
 
-fill_csv('updated_dataset-fixed', fatty_acids)
+fill_csv('SHAP_training_run', fatty_acids)
 
