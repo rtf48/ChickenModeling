@@ -137,35 +137,6 @@ def train(data_train, labels_train):
     # Train the model
     model.fit(data_train, labels_train)
 
-
-    #explainer = shap.Explainer(model)
-    #shap_values = explainer(data)
-    #shap_values = shap.TreeExplainer(model).shap_interaction_values(data)
-
-    #bs = shap.plots.beeswarm(shap_values, max_display=30, show=False)
-    #bs = shap.summary_plot(shap_values, data.iloc[:2000,:], max_display=30, show=False)
-    #bs = shap.dependence_plot(
-    #("C14,g", "C22:6n-3 DHA,g"),
-    #shap_values, data.iloc[:2000,:], 
-    #show=False)
-
-
-    if False:
-        tmp = np.abs(shap_values).sum(0)
-        for i in range(tmp.shape[0]):
-            tmp[i,i] = 0
-        inds = np.argsort(-tmp.sum(0))[:50]
-        tmp2 = tmp[inds,:][:,inds]
-        plt.figure(figsize=(12,12))
-        plt.imshow(tmp2)
-        plt.yticks(range(tmp2.shape[0]), data.columns[inds], rotation=50.4, horizontalalignment="right")
-        plt.xticks(range(tmp2.shape[0]), data.columns[inds], rotation=50.4, horizontalalignment="left")
-        plt.gca().xaxis.tick_top()
-
-        plt.tight_layout()
-        plt.savefig(f'smallModel/outputs/plots/{target}')
-        plt.close()
-
     return model
 
 
@@ -224,6 +195,41 @@ def eval_all(model, data, labels, data_train, data_test, labels_train, labels_te
 
     return metrics, importance
 
+def compute_shap(model, data, target):
+
+    explainer = shap.Explainer(model)
+    shap_values = explainer(data)
+
+    #bs = shap.plots.beeswarm(shap_values, max_display=30, show=False)
+    #bs = shap.summary_plot(shap_values, data.iloc[:2000,:], max_display=30, show=False)
+    #bs = shap.dependence_plot(
+    #("C14,g", "C22:6n-3 DHA,g"),
+    #shap_values, data.iloc[:2000,:], 
+    #show=False)
+
+    shap_interaction_values = shap.TreeExplainer(model).shap_interaction_values(data)
+    siv_sum = np.abs(shap_interaction_values).sum(0)
+
+
+    #tmp = np.abs(shap_interaction_values).sum(0)
+    #for i in range(tmp.shape[0]):
+    #        tmp[i,i] = 0
+    #inds = np.argsort(-tmp.sum(0))[:50]
+    #tmp2 = tmp[inds,:][:,inds]
+    #plt.figure(figsize=(12,12))
+    #plt.imshow(tmp2)
+    #plt.yticks(range(tmp2.shape[0]), data.columns[inds], rotation=50.4, horizontalalignment="right")
+    #plt.xticks(range(tmp2.shape[0]), data.columns[inds], rotation=50.4, horizontalalignment="left")
+    #plt.gca().xaxis.tick_top()
+
+    #plt.tight_layout()
+    #plt.savefig(f'smallModel/outputs/plots/{target}')
+    #plt.close()
+
+    return shap_values, shap_interaction_values
+
+
+
     
     
             
@@ -244,6 +250,8 @@ def fill_csv(name, inputs, targets):
         metrics, importance = eval_all(model, data, labels, data_train, data_test, labels_train, labels_test, label)
         importance_frame[label] = importance['Importance']
         metric_frame[label] = metrics['Value']
+
+        compute_shap(model, data, label)
 
 
     
