@@ -195,7 +195,7 @@ def eval_all(model, data, labels, data_train, data_test, labels_train, labels_te
 
     return metrics, importance
 
-def compute_shap(model, data, target):
+def compute_shap(model, data):
 
     explainer = shap.Explainer(model)
     shap_values = explainer(data)
@@ -208,8 +208,21 @@ def compute_shap(model, data, target):
     #show=False)
 
     shap_interaction_values = shap.TreeExplainer(model).shap_interaction_values(data)
-    siv_sum = np.abs(shap_interaction_values).sum(0)
+    siv_sum = shap_interaction_values.sum(0)
 
+    shap_ivs = pd.DataFrame(siv_sum, columns = data.columns, index = data.columns)
+
+    siv_manip = np.abs(shap_interaction_values.sum(0))
+    for i in range(siv_manip.shape[0]):
+            siv_manip[i,i] = 0
+    siv_manip = siv_manip/siv_manip.sum()
+    
+    manip_ivs = pd.DataFrame(siv_manip, columns = data.columns, index = data.columns)
+
+    
+
+
+    
 
     #tmp = np.abs(shap_interaction_values).sum(0)
     #for i in range(tmp.shape[0]):
@@ -226,7 +239,7 @@ def compute_shap(model, data, target):
     #plt.savefig(f'smallModel/outputs/plots/{target}')
     #plt.close()
 
-    return shap_values, shap_interaction_values
+    return shap_ivs, manip_ivs
 
 
 
@@ -251,8 +264,19 @@ def fill_csv(name, inputs, targets):
         importance_frame[label] = importance['Importance']
         metric_frame[label] = metrics['Value']
 
-        compute_shap(model, data, label)
+        shap_ivs, manip_ivs = compute_shap(model, data)
 
+        important_interactions = manip_ivs.loc[["C14,g","C16:0,g","C18:0,g"],
+                                              ["C18:1,g","C18:2 cis n-6 LA,g","C18:3 cis n-3 ALA,g","C22:6n-3 DHA,g"]]
+        
+        if metrics["Value"][4] > 0.7:
+            #print(important_interactions)
+            for i in important_interactions:
+                for j in important_interactions[i]:
+                    if j > 0.025:
+                        print(important_interactions)
+                        break
+        
 
     
 
@@ -285,6 +309,6 @@ tfa_outputs = [
 #run(valuable_outputs)
 #possibly nonfunctional: breast ampk, breast mtor, breast c18:3, 
 
-fill_csv('crossval_test', fatty_acids, targets)
+fill_csv('crossval_test', fatty_acids, target_labels_1 + target_labels_3)
 
 
