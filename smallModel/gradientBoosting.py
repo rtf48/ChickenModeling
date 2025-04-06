@@ -8,7 +8,7 @@ import pandas as pd
 import math
 import shap
 
-data_set = pd.read_csv('smallModel/Calculated_Value_Dataset_Updated-copy(1).csv')
+data_set = pd.read_csv('smallModel/Dataset_3_12.csv')
 
 z_norm_features = ['breast mTOR','breast S6K1','breast 4E-BP1','breast MURF1',
                    'breast MAFbx','breast AMPK', 'liver mTOR','liver S6K1',
@@ -69,11 +69,11 @@ target_labels_2 = ['akp U per ml','alt (U per L)','glucose (g per L)',"nefa,umol
 
 #The following have too little data: Plasma C16:1, Plasma C18:1, Plasma C18:3, Plasma n-6, 
 #Plasma C20:5, Liver C18:1
-#'Plasma SFA','Plasma MUFA','Plasma PUFA','Plasma n-3',
+#'Plasma SFA','Plasma MUFA','Plasma PUFA','Plasma n-3','Breast C20:5','Liver C20:5',
 target_labels_3 = [
-                   'Liver PUFA','Liver n-3','Liver n-6','Liver C18:3 ','Liver C20:5',
+                   'Liver PUFA','Liver n-3','Liver n-6','Liver C18:3 ',
                    'Liver C22:6','Breast SFA','Breast MUFA','Breast PUFA','Breast n-3',
-                   'Breast n-6','Breast C18:3 ','Breast C20:5','Breast C22:6','Thigh SFA',
+                   'Breast n-6','Breast C18:3 ','Breast C22:6','Thigh SFA',
                    'Thigh MUFA','Thigh PUFA','Thigh n-3','Thigh n-6','Thigh C18:3',
                    'Thigh C20:4','Thigh C22:6']
 
@@ -212,7 +212,7 @@ def compute_shap(model, data):
 
     shap_ivs = pd.DataFrame(siv_sum, columns = data.columns, index = data.columns)
 
-    siv_manip = np.abs(shap_interaction_values.sum(0))
+    siv_manip = np.abs(shap_interaction_values).sum(0)
     for i in range(siv_manip.shape[0]):
             siv_manip[i,i] = 0
     siv_manip = siv_manip/siv_manip.sum()
@@ -239,7 +239,7 @@ def compute_shap(model, data):
     #plt.savefig(f'smallModel/outputs/plots/{target}')
     #plt.close()
 
-    return shap_ivs, manip_ivs
+    return shap_interaction_values, manip_ivs
 
 
 
@@ -266,17 +266,36 @@ def fill_csv(name, inputs, targets):
 
         shap_ivs, manip_ivs = compute_shap(model, data)
 
+        
+
+
         important_interactions = manip_ivs.loc[["C14,g","C16:0,g","C18:0,g"],
                                               ["C18:1,g","C18:2 cis n-6 LA,g","C18:3 cis n-3 ALA,g","C22:6n-3 DHA,g"]]
         
-        if metrics["Value"][4] > 0.7:
+        if metrics["Value"][4] > 1:
             #print(important_interactions)
-            for i in important_interactions:
-                for j in important_interactions[i]:
-                    if j > 0.025:
-                        print(important_interactions)
-                        break
-        
+            for i in important_interactions.columns:
+                for j in important_interactions.index:
+                    if important_interactions[i][j] > 0.025:
+                        print(important_interactions[i][j])
+                        fig, ax = plt.subplots()
+                        plt.imshow(manip_ivs)
+                        #for i in range(manip_ivs.shape[0]):
+                        #    for j in range(manip_ivs.shape[1]):
+                        #        ax.text(j, i, f'{manip_ivs.iloc[i, j]:.2f}', ha='center', va='center', color='white',fontsize=6)
+                        plt.yticks(range(manip_ivs.shape[0]), data.columns, rotation=50.4, horizontalalignment="right")
+                        plt.xticks(range(manip_ivs.shape[0]), data.columns, rotation=50.4, horizontalalignment="left")
+                        plt.gca().xaxis.tick_top()
+                        ax.set_title(label)
+                        fig.tight_layout()
+
+                        plt.savefig(f'smallModel/outputs/plots/{label}_heatmap')
+                        plt.close()
+
+                        plot_shap_interaction(shap_ivs, i, j, data, label)
+                        
+                        
+                        
 
     
 
@@ -284,6 +303,36 @@ def fill_csv(name, inputs, targets):
         file.write(importance_frame.to_csv())
     with open(f'smallModel/outputs/{name}_metrics.csv', "w") as file:
         file.write(metric_frame.to_csv())
+
+def plot_shap_interaction(shap_interaction_values, feature_1, feature_2, data, label):
+    """
+    Plot SHAP interaction values with color representing magnitude.
+
+    Parameters:
+    shap_interaction_values (numpy.ndarray or pd.DataFrame): SHAP interaction values matrix
+    feature_1 (str): Name of the first feature (x-axis)
+    feature_2 (str): Name of the second feature (y-axis)
+    data (pd.DataFrame): Original data used for SHAP interpretation
+    """
+    
+    # Get feature indices
+    feature_1_index = data.columns.get_loc(feature_1)
+    feature_2_index = data.columns.get_loc(feature_2)
+
+    # Extract interaction values
+    interaction_values = shap_interaction_values[:, feature_1_index, feature_2_index]
+
+    # Plot
+    plt.figure(figsize=(8, 6))
+    scatter = plt.scatter(data[feature_1], data[feature_2], c=np.abs(interaction_values), cmap='viridis', s=60)
+    plt.colorbar(scatter, label='Interaction Magnitude')
+    
+    plt.xlabel(feature_1)
+    plt.ylabel(feature_2)
+    plt.title(f'SHAP Interaction {label}]: {feature_1} vs {feature_2}')
+    plt.grid(True)
+    plt.savefig(f'smallModel/outputs/plots/{label}_{feature_1}_vs_{feature_2}')
+    plt.close()
 
 valuable_outputs = ['bodyweightgain,g','average feed intake g per d','Liver n-3',
           'Liver C22:6','Breast n-3','Breast C18:3 ','Breast C22:6',
@@ -309,6 +358,6 @@ tfa_outputs = [
 #run(valuable_outputs)
 #possibly nonfunctional: breast ampk, breast mtor, breast c18:3, 
 
-fill_csv('crossval_test', fatty_acids, target_labels_1 + target_labels_3)
+fill_csv('Dataset_3_12_shap_gb', fatty_acids, targets)
 
 

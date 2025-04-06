@@ -6,8 +6,9 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_percentage_error
 import pandas as pd
 import math
+import gradientBoosting
 
-dataset = pd.read_csv('smallModel/Calculated_Value_Dataset_Weekly_Encoding.csv')
+dataset = pd.read_csv('smallModel/Dataset_3_12.csv')
 
 target_features_comp = ['time period',"ME, kcal/kg",'Overall','NDF','ADF','NFC','Crude fiber',
                         'Starch','CP','Arginine','Histidine','Isoleucine','Leucine','Lysine','Methionine',
@@ -25,26 +26,42 @@ target_features_comp = ['time period',"ME, kcal/kg",'Overall','NDF','ADF','NFC',
                         'Se','Zn']
 
 
-fatty_acids = ['SFA','MUFA','PUFA','n-3 PUFA','n-6 PUFA','n-3/n-6 ratio','C14','C15:0',
-               'C15:1','C16:0','C16:1','C17:0','C17:1','C18:0','C18:1','C18:2 cis n-6 LA',
-               'C18:3 cis n-3 ALA','C20:0','C20:1','C20:4n-6 ARA','C20:5n-3 EPA','C22:0','C22:1',
-               'C22:6n-3 DHA','C24:0','time period']
+fatty_acids = ["SFA,g","MUFA,g","PUFA,g","n-3 PUFA,g",
+                        "n-6 PUFA,g","n-3:n-6 ratio,g","C14,g",
+                        "C16:0,g","C16:1,g","C18:0,g","C18:1,g",
+                        "C18:2 cis n-6 LA,g","C18:3 cis n-3 ALA,g","C20:0,g",
+                        "C20:1,g","C22:0,g",
+                        "C22:6n-3 DHA,g","C24:0,g", "Start", "End"]
+# removed c15:0, c15:1, c17:0, c17:1, C20:4n6, C20:5n3, C22:1, C22:5 due to lack of data
 
-target_labels_1 = ['average feed intake g/d','bodyweightgain']
+minerals = ["Calcium,g",
+                        "Total Phosphorus,g","Inorganic available P,g","Ca:P ratio",
+                        "Na,g","Cl,g","K,g","Mg,g","S,mg","Cu mg","I mg","Fe,mg",
+                        "Mn,mg","Se,mg","Zn,mg", "Start", "End"]
+#is ash a mineral? is choline?
 
-target_labels_2 = ['akp','alt (U/L)','glucose (g/L)',
-                 'nefa','pip','tc','tg',
-                 'trap','uric acid','BCA']
+
+vitamins = ["Vitamin A IU","beta-carotene,mg","Vitamin D3 IU",
+                        "Vitamin E IU","Vitamin K mg",
+                        "Thiamin mg","Riboflavin mg","Niacin mg",
+                        "Pantothenic acid mg","Pyridoxine mg","Biotin mg",
+                        "Folic acid mg","Vitamin B12 mg ", "Start", "End"]
+#removed Vitamin D3 25-Hydroxyvitamin D due to lack of data
+
+target_labels_1 = ['average feed intake g per d','bodyweightgain,g']
+
+target_labels_2 = ['akp U per ml','alt (U per L)','glucose (g per L)',"nefa,umol per L",
+                   'pip mg per dL','tc mg per g','tg mg per g','trap U per L','uric acid mmol per L','BCA']
 
 #The following have too little data: Plasma C16:1, Plasma C18:1, Plasma C18:3, Plasma n-6, 
 #Plasma C20:5, Liver C18:1
-#'Plasma SFA','Plasma MUFA','Plasma PUFA','Plasma n-3',
+#'Plasma SFA','Plasma MUFA','Plasma PUFA','Plasma n-3','Breast C20:5','Liver C20:5',
 target_labels_3 = [
-                   'Liver PUFA','Liver n-3','Liver n-6','Liver C18:3 ','Liver C20:5',
+                   'Liver PUFA','Liver n-3','Liver n-6','Liver C18:3 ',
                    'Liver C22:6','Breast SFA','Breast MUFA','Breast PUFA','Breast n-3',
-                   'Breast n-6','Breast C18:3 ','Breast C20:5','Breast C22:6','Thigh SFA',
-                   'Thigh MUFA','Thigh PUFA','Thigh n-3','Thigh n-6','Thigh C18:3 ',
-                   'Thigh C20:5','Thigh C22:6']
+                   'Breast n-6','Breast C18:3 ','Breast C22:6','Thigh SFA',
+                   'Thigh MUFA','Thigh PUFA','Thigh n-3','Thigh n-6','Thigh C18:3',
+                   'Thigh C20:4','Thigh C22:6']
 
 target_labels_4 = ['breast mTOR','breast S6K1','breast 4E-BP1','breast MURF1',
                    'breast MAFbx','breast AMPK','breast LAT1','breast CAT1',
