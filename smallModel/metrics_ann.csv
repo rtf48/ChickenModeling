@@ -1,0 +1,16 @@
+Model,Target,Training RMSE,Training R2,Training MAPE,Testing RMSE,Testing R2,Testing MAPE
+ann_model_Plasma_n-3.pkl,Plasma n-3,0.1361,0.3531,33.38,0.1459,-0.0661,30.04
+ann_model_Liver_SFA.pkl,Liver SFA,1.9318,0.1892,13.15,1.8515,0.2338,11.36
+ann_model_Breast_n-3.pkl,Breast n-3,0.0782,0.92,20.79,0.0545,0.9635,19.66
+ann_model_Liver_C226.pkl,Liver C22:6,1.7582,-0.4665,86.39,1.359,0.0942,113.33
+ann_model_Thigh_SFA.pkl,Thigh SFA,0.5466,-1.2638,15.17,0.4864,-0.6964,14.94
+ann_model_Thigh_C226.pkl,Thigh C22:6,0.149,0.6831,17.72,0.2327,0.3753,23.22
+ann_model_Breast_MUFA.pkl,Breast MUFA,0.7716,-0.279,23.47,0.7143,0.1129,21.52
+ann_model_Thigh_n-3.pkl,Thigh n-3,0.2055,0.7051,55.68,0.2472,0.6619,127.92
+ann_model_Liver_MUFA.pkl,Liver MUFA,0.3103,-0.1494,38.42,0.2518,-0.3454,37.22
+ann_model_Breast_SFA.pkl,Breast SFA,0.481,0.0495,14.88,0.4552,0.271,12.21
+ann_model_Liver_n-3.pkl,Liver n-3,2.0681,-0.3259,97.8,1.6453,0.0852,138.32
+ann_model_Plasma_SFA.pkl,Plasma SFA,0.2731,-0.0254,23.74,0.1923,-0.1145,14.59
+ann_model_Thigh_MUFA.pkl,Thigh MUFA,0.6008,0.0698,19.71,0.7367,-1.1975,25.79
+ann_model_Breast_C226.pkl,Breast C22:6,0.0687,0.8694,10.93,0.0637,0.8931,6.61
+ann_model_Plasma_C226.pkl,Plasma C22:6,0.096,-0.1237,17.94,0.1021,-0.7923,21.1
