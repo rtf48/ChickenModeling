@@ -358,6 +358,6 @@ tfa_outputs = [
 #run(valuable_outputs)
 #possibly nonfunctional: breast ampk, breast mtor, breast c18:3, 
 
-fill_csv('Dataset_3_12_shap_gb', fatty_acids, targets)
+fill_csv('technical', fatty_acids, [targets])
 
 
