@@ -9,7 +9,7 @@ def evaluate(model, data, labels):
     r2 = r2_score(labels, predictions)
     mape = mean_absolute_percentage_error(labels, predictions)
 
-    metrics = {'RMSE':rmse, 'R2':r2, 'MAPE':mape}
+    metrics = {'rmse':rmse, 'r2':r2, 'mape':mape}
 
     return metrics
 
