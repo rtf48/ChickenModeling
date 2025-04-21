@@ -114,9 +114,8 @@ def save_output_csv(name, df):
      with open(f'ModelComparison/outputs/{name}.csv', "w") as file:
         file.write(df.to_csv())
 
-compare_all = eval_all(ls.all_features, ls.all_targets)
-save_output_csv('compare-all-models', compare_all)
-
+compare_all = eval_all(ls.target_features_comp, ls.all_targets)
+save_output_csv('full-feature-comparison', compare_all)
         
     
 

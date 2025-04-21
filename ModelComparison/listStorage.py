@@ -21,9 +21,6 @@ target_features_comp = ['Start','End',"ME, kcal","NDF,g","ADF,g","NFC,g","Crude 
                 'Vitamin B12 mg ','Choline mg',"Calcium,g","Total Phosphorus,g",
                 "Inorganic available P,g",'Ca:P ratio',"Na,g","Cl,g","K,g","Mg,g",
                 "S,mg",'Cu mg','I mg',"Fe,mg","Mn,mg","Se,mg","Zn,mg"]
-#the following have no data and should not be included in any dataset:
-#overall, c15:0, c15:1, c17:0, c17:1, Vitamin D3 25-Hydroxyvitamin D, 
-
 
 
 fatty_acids = ["SFA,g","MUFA,g","PUFA,g","n-3 PUFA,g",
