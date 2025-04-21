@@ -22,37 +22,13 @@ target_features_comp = ['Start','End',"ME, kcal","NDF,g","ADF,g","NFC,g","Crude 
                 "Inorganic available P,g",'Ca:P ratio',"Na,g","Cl,g","K,g","Mg,g",
                 "S,mg",'Cu mg','I mg',"Fe,mg","Mn,mg","Se,mg","Zn,mg"]
 
-
-fatty_acids = ["SFA,g","MUFA,g","PUFA,g","n-3 PUFA,g",
-                        "n-6 PUFA,g","n-3:n-6 ratio,g","C14,g",
-                        "C16:0,g","C16:1,g","C18:0,g","C18:1,g",
-                        "C18:2 cis n-6 LA,g","C18:3 cis n-3 ALA,g","C20:0,g",
-                        "C20:1,g","C22:0,g",
-                        "C22:6n-3 DHA,g","C24:0,g", "Start", "End"]
-# removed c15:0, c15:1, c17:0, c17:1, C20:4n6, C20:5n3, C22:1, C22:5 due to lack of data
-
-minerals = ["Calcium,g",
-                        "Total Phosphorus,g","Inorganic available P,g","Ca:P ratio",
-                        "Na,g","Cl,g","K,g","Mg,g","S,mg","Cu mg","I mg","Fe,mg",
-                        "Mn,mg","Se,mg","Zn,mg", "Start", "End"]
-#is ash a mineral? is choline?
-
-
-vitamins = ["Vitamin A IU","beta-carotene,mg","Vitamin D3 IU",
-                        "Vitamin E IU","Vitamin K mg",
-                        "Thiamin mg","Riboflavin mg","Niacin mg",
-                        "Pantothenic acid mg","Pyridoxine mg","Biotin mg",
-                        "Folic acid mg","Vitamin B12 mg ", "Start", "End"]
-#removed Vitamin D3 25-Hydroxyvitamin D due to lack of data
-
 target_labels_1 = ['average feed intake g per d','bodyweightgain,g']
 
 target_labels_2 = ['akp U per ml','alt (U per L)','glucose (g per L)',"nefa,umol per L",
                    'pip mg per dL','tc mg per g','tg mg per g','trap U per L','uric acid mmol per L','BCA']
 
-#The following have too little data: Plasma C16:1, Plasma C18:1, Plasma C18:3, Plasma n-6, 
-#Plasma C20:5, Liver C18:1
-#'Plasma SFA','Plasma MUFA','Plasma PUFA','Plasma n-3','Breast C20:5','Liver C20:5',
+
+
 target_labels_3 = [
                    'Liver PUFA','Liver n-3','Liver n-6','Liver C18:3 ',
                    'Liver C22:6','Breast SFA','Breast MUFA','Breast PUFA','Breast n-3',
@@ -67,19 +43,8 @@ target_labels_4 = ['breast mTOR','breast S6K1','breast 4E-BP1','breast MURF1',
                    'Pax7','Mrf4','Mrf5','liver mTOR','liver S6K1',
                    'liver 4E-BP1','liver MURF1','liver MAFbx','liver AMPK']
 
-mystery_features = ['breast mTOR','breast MURF1','breast AMPK','liver mTOR','liver MURF1','liver AMPK']
-
-tfa_outputs = [
-                   'Liver PUFA','Liver n-3','Liver n-6',
-                   'Liver C22:6','Breast SFA','Breast MUFA','Breast PUFA','Breast n-3',
-                   'Breast n-6','Breast C18:3 ','Breast C22:6','Thigh SFA',
-                   'Thigh MUFA','Thigh PUFA','Thigh n-3','Thigh n-6','Thigh C18:3',
-                   'Thigh C20:4','Thigh C22:6']
-
-valuable_outputs = ['bodyweightgain,g','average feed intake g per d','Liver n-3',
-          'Liver C22:6','Breast n-3','Breast C18:3 ','Breast C22:6',
-          'Thigh C20:4','Thigh C22:6','breast AMPK','breast mTOR']
-
-all_features = list(set(fatty_acids + vitamins + minerals))
 
 all_targets = target_labels_1 + target_labels_2 + target_labels_3 + target_labels_4
+
+issues_dont_train = ['Plasma C16:1', 'Plasma C18:1', 'Plasma C18:3', 'Plasma n-6',
+                    'Plasma C20:5', 'Liver C18:1', 'Plasma SFA','Plasma MUFA','Plasma PUFA','Plasma n-3','Breast C20:5','Liver C20:5']
