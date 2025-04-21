@@ -34,7 +34,8 @@ target_labels_3 = [
                    'Liver C22:6','Breast SFA','Breast MUFA','Breast PUFA','Breast n-3',
                    'Breast n-6','Breast C18:3 ','Breast C22:6','Thigh SFA',
                    'Thigh MUFA','Thigh PUFA','Thigh n-3','Thigh n-6','Thigh C18:3',
-                   'Thigh C20:4','Thigh C22:6']
+                   'Thigh C20:4','Thigh C22:6','Plasma n-6','Plasma SFA','Plasma PUFA',
+                    'Plasma n-3','Breast C20:5','Liver C20:5']
 
 target_labels_4 = ['breast mTOR','breast S6K1','breast 4E-BP1','breast MURF1',
                    'breast MAFbx','breast AMPK','breast LAT1','breast CAT1',
@@ -46,5 +47,5 @@ target_labels_4 = ['breast mTOR','breast S6K1','breast 4E-BP1','breast MURF1',
 
 all_targets = target_labels_1 + target_labels_2 + target_labels_3 + target_labels_4
 
-issues_dont_train = ['Plasma C16:1', 'Plasma C18:1', 'Plasma C18:3', 'Plasma n-6',
-                    'Plasma C20:5', 'Liver C18:1', 'Plasma SFA','Plasma MUFA','Plasma PUFA','Plasma n-3','Breast C20:5','Liver C20:5']
+not_enough_data = ['Plasma C16:1', 'Plasma C18:1', 'Plasma C18:3', 'Plasma C20:5', 'Liver C18:1', 'Plasma MUFA',]
+

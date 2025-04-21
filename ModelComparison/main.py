@@ -100,13 +100,23 @@ def eval_all(features, targets):
     'nn rmse', 'nn r2', 'rnn mape',
     'gb rmse', 'gb r2', 'gb mape'])
 
+    failed_runs = []
+    
+
     for t in targets:
-        metrics = compare_models(features, t)
-        results.loc[t] = [metrics['rf']['rmse'],metrics['rf']['r2'],metrics['rf']['mape'],
+
+        try:
+            metrics = compare_models(features, t)
+            results.loc[t] = [metrics['rf']['rmse'],metrics['rf']['r2'],metrics['rf']['mape'],
                           metrics['lr']['rmse'],metrics['lr']['r2'],metrics['lr']['mape'],
                           metrics['svm']['rmse'],metrics['svm']['r2'],metrics['svm']['mape'],
                           metrics['nn']['rmse'],metrics['nn']['r2'],metrics['nn']['mape'],
                           metrics['gb']['rmse'],metrics['gb']['r2'],metrics['gb']['mape']]
+        except:
+            failed_runs += [t]
+
+    if len(failed_runs) > 0:
+        print(f"Training failed for {failed_runs}")
         
     return results
 
