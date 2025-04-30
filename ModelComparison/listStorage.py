@@ -25,17 +25,17 @@ target_features_comp = ['Start','End',"ME, kcal","NDF,g","ADF,g","NFC,g","Crude 
 target_labels_1 = ['average feed intake g per d','bodyweightgain,g']
 
 target_labels_2 = ['akp U per ml','alt (U per L)','glucose (g per L)',"nefa,umol per L",
-                   'pip mg per dL','tc mg per g','tg mg per g','trap U per L','uric acid mmol per L','BCA']
+                   'tg mg per g','trap U per L','uric acid mmol per L','BCA']
 
 
 
 target_labels_3 = [
-                   'Liver PUFA','Liver n-3','Liver n-6','Liver C18:3 ',
+                   'Liver PUFA','Liver n-3','Liver C18:3 ',
                    'Liver C22:6','Breast SFA','Breast MUFA','Breast PUFA','Breast n-3',
                    'Breast n-6','Breast C18:3 ','Breast C22:6','Thigh SFA',
                    'Thigh MUFA','Thigh PUFA','Thigh n-3','Thigh n-6','Thigh C18:3',
                    'Thigh C20:4','Thigh C22:6','Plasma n-6','Plasma SFA','Plasma PUFA',
-                    'Plasma n-3','Breast C20:5','Liver C20:5']
+                    'Plasma n-3']
 
 target_labels_4 = ['breast mTOR','breast S6K1','breast 4E-BP1','breast MURF1',
                    'breast MAFbx','breast AMPK','breast LAT1','breast CAT1',
@@ -47,5 +47,6 @@ target_labels_4 = ['breast mTOR','breast S6K1','breast 4E-BP1','breast MURF1',
 
 all_targets = target_labels_1 + target_labels_2 + target_labels_3 + target_labels_4
 
-not_enough_data = ['Plasma C16:1', 'Plasma C18:1', 'Plasma C18:3', 'Plasma C20:5', 'Liver C18:1', 'Plasma MUFA',]
+not_enough_data = ['Plasma C16:1', 'Plasma C18:1', 'Plasma C18:3', 'Plasma C20:5',
+                    'Liver C18:1', 'Plasma MUFA', 'pip mg per dL','tc mg per g','Liver n-6', 'Breast C20:5','Liver C20:5']
 
