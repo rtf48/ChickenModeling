@@ -139,23 +139,53 @@ def eval_all(features, targets):
         
     return results
 
+def eval_one(features, targets):
+
+    results = pd.DataFrame(columns=['rmse', 'r2', 'mape'])
+
+    failed_runs = []
+
+    for t in targets:
+
+        data, labels = dataset.get_data(features, t)
+        train_data, test_data, train_labels, test_labels = train_test_split(data, labels, test_size=0.2, random_state=42)
+
+        
+        model = models.get_gb(t)
+        model.fit(train_data, train_labels)
+        metrics = analysis.evaluate(model, test_data, test_labels)
+
+        original = models.gb_model
+        original.fit(train_data, train_labels)
+        o_metrics = analysis.evaluate(original, test_data, test_labels)
+
+        if o_metrics['r2'] > metrics['r2']:
+            #print('original superior by', o_metrics['r2'] - metrics['r2'], 'for', t)
+            metrics = o_metrics
+            model = original
+
+        results.loc[t] = [metrics['rmse'],metrics['r2'],metrics['mape']]
+
+        interactions, readable_interactions = shapAnalysis.compute_shap(model, data, t)
+        save_output_csv(f'shapOutputs/{t}', readable_interactions)
+
+
+    if len(failed_runs) > 0:
+        print(f"Training failed for {failed_runs}")
+        
+    return results
+
+
 def save_output_csv(name, df):
      with open(f'ModelComparison/outputs/{name}.csv', "w") as file:
         file.write(df.to_csv())
 
 #compare_all = eval_all(ls.target_features_comp, ls.target_labels_1 + ls.target_labels_3)
 #save_output_csv('attention2', compare_all)
-        
 
+shap_inter_results = eval_one(ls.target_features_comp, ls.all_targets)
+save_output_csv('shap_inter_results', shap_inter_results)
 
-data, labels = dataset.get_data(ls.target_features_comp, 'Breast PUFA')
-train_data, test_data, train_labels, test_labels = train_test_split(data, labels, test_size=0.2, random_state=42)
-model1 = gb.fit(train_data, train_labels)
-model2 = models.gb_model.fit(train_data, train_labels)
-metrics1 = analysis.evaluate(model1, test_data, test_labels)
-metrics2 = analysis.evaluate(model2, test_data, test_labels)
-print(metrics1)
-print(metrics2)
 
             
 

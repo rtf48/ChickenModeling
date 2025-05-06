@@ -1,9 +1,9 @@
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import shap
 import pandas as pd
 import numpy as np
 
-def compute_shap(model, data):
+def compute_shap(model, data, filename):
 
     explainer = shap.Explainer(model)
     shap_values = explainer(data)
@@ -23,29 +23,22 @@ def compute_shap(model, data):
     siv_manip = np.abs(shap_interaction_values).sum(0)
     for i in range(siv_manip.shape[0]):
             siv_manip[i,i] = 0
-    siv_manip = siv_manip/siv_manip.sum()
+    #siv_manip = siv_manip/siv_manip.sum()
     
     manip_ivs = pd.DataFrame(siv_manip, columns = data.columns, index = data.columns)
 
-    
+    tmp = siv_manip
+    inds = np.argsort(-tmp.sum(0))[:50]
+    tmp2 = tmp[inds,:][:,inds]
+    plt.figure(figsize=(12,12))
+    plt.imshow(tmp2)
+    plt.yticks(range(tmp2.shape[0]), data.columns[inds], rotation=50.4, horizontalalignment="right")
+    plt.xticks(range(tmp2.shape[0]), data.columns[inds], rotation=50.4, horizontalalignment="left")
+    plt.gca().xaxis.tick_top()
 
-
-    
-
-    #tmp = np.abs(shap_interaction_values).sum(0)
-    #for i in range(tmp.shape[0]):
-    #        tmp[i,i] = 0
-    #inds = np.argsort(-tmp.sum(0))[:50]
-    #tmp2 = tmp[inds,:][:,inds]
-    #plt.figure(figsize=(12,12))
-    #plt.imshow(tmp2)
-    #plt.yticks(range(tmp2.shape[0]), data.columns[inds], rotation=50.4, horizontalalignment="right")
-    #plt.xticks(range(tmp2.shape[0]), data.columns[inds], rotation=50.4, horizontalalignment="left")
-    #plt.gca().xaxis.tick_top()
-
-    #plt.tight_layout()
-    #plt.savefig(f'smallModel/outputs/plots/{target}')
-    #plt.close()
+    plt.tight_layout()
+    plt.savefig(f'ModelComparison/outputs/shapOutputs/{filename}_heatmap')
+    plt.close()
 
     return shap_interaction_values, manip_ivs
 
@@ -76,7 +69,7 @@ def plot_shap_interaction(shap_interaction_values, feature_1, feature_2, data, l
     plt.ylabel(feature_2)
     plt.title(f'SHAP Interaction {label}]: {feature_1} vs {feature_2}')
     plt.grid(True)
-    plt.savefig(f'smallModel/outputs/plots/{label}_{feature_1}_vs_{feature_2}')
+    plt.savefig(f'ModelComparison/outputs/shapOutputs/{label}_{feature_1}_vs_{feature_2}')
     plt.close()
 
 def plot_some_interactions(model, data, label):

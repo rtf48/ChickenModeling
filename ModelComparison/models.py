@@ -2,6 +2,7 @@ from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.svm import SVR
 from sklearn.neural_network import MLPRegressor
+import pandas as pd
 
 rf_model = RandomForestRegressor(
     n_estimators=200, 
@@ -36,3 +37,24 @@ gb_model = GradientBoostingRegressor(
     )
 
 svm_model = SVR(kernel='rbf', C=1.0, epsilon=0.1)
+
+def get_gb(target, filename='ModelComparison/modelParameters/gb_params.csv'):
+
+    df = pd.read_csv(filename, index_col=0)
+
+    gb_model = GradientBoostingRegressor(
+        n_estimators=1000,        # Number of boosting stages
+        learning_rate=df.loc[target,'learning_rate'],       # Learning rate (shrinkage)
+        max_depth=int(df.loc[target,'max_depth']),             # Maximum depth of each tree
+        subsample=df.loc[target,'subsample'],           # Fraction of samples used for fitting each tree
+        max_features=df.loc[target,'max_features'],
+        min_samples_leaf=int(df.loc[target,'min_samples_leaf']),
+        min_samples_split=int(df.loc[target,'min_samples_split']),
+        validation_fraction=0.2,
+        n_iter_no_change=10,
+        tol=0.0001,
+        random_state=42
+    )
+
+    return gb_model
+

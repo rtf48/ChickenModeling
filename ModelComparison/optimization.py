@@ -7,6 +7,7 @@ import sklearn
 from skopt import BayesSearchCV
 from skopt.space import Integer, Real
 from sklearn.metrics import r2_score
+import pandas as pd
 
 
 rf_search_space = {
@@ -32,7 +33,7 @@ nn_search_space = {
     'tol': Real(0.0001, 0.01, prior='uniform')
 }
 
-def optimize_model(model, search_space, features, target, filename=""):
+def optimize_model(model, search_space, features, target):
 
     data, labels = dataset.get_data(features, target)
 
@@ -42,22 +43,36 @@ def optimize_model(model, search_space, features, target, filename=""):
         search_spaces=search_space,
         cv=5,
         scoring='r2',
-        n_jobs=1,
-        random_state=42
+        random_state=42,
+        n_iter=32
         )
 
     opt.fit(data, labels)
 
     # Print best score and parameters
     print(target)
-    print("Best R2 score: {:.4f}".format(opt.best_score_))
+    print("Best score: {:.4f}".format(opt.best_score_))
     print("Best hyperparameters:")
     print(opt.best_params_)
 
     return(opt.best_params_)
 
-for target in (ls.target_labels_1 + ['Breast SFA','Breast MUFA','Breast PUFA','Breast n-3',
-                                    'Breast C18:3','Breast C22:6']):
-    
+def optimize_all(model, search_space, features, targets, filename):
 
-    optimize_model(models.gb_model, gb_search_space, ls.target_features_comp, target)
+    params = pd.DataFrame(columns=['0','1','2','3','4','5'])
+    failures = []
+
+    for target in targets:
+        try:
+            p = optimize_model(model, search_space, features, target)
+            params.columns = p.keys()
+            params.loc[target] = p.values()
+        except:
+            failures += [target]
+        
+    print('optimization failed for:', failures)
+    with open(f'ModelComparison/modelParameters/{filename}.csv', "w") as file:
+        file.write(params.to_csv())
+
+optimize_all(models.gb_model, gb_search_space, ls.target_features_comp, ls.all_targets, 'gb_params')
+#optimize_all(models.gb_model, gb_search_space, ls.target_features_comp, ls.target_labels_3+ls.target_labels_4, 'gb_params')
