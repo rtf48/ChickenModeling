@@ -5,74 +5,14 @@ from sklearn.svm import SVR
 from sklearn.neural_network import MLPRegressor
 from sklearn.model_selection import train_test_split
 import pandas as pd
-import attention
+import joblib
 
 import analysis
 import shapAnalysis
 import dataset
 import listStorage as ls
-import models
-
-rf = RandomForestRegressor(
-    n_estimators=597, 
-    max_depth=5,
-    min_samples_split=8,
-    min_samples_leaf=5,
-    max_features=0.27,
-    random_state=42
-)
-
-lr = LinearRegression()
-
-nn = MLPRegressor(hidden_layer_sizes=(64, 32),  # Two hidden layers
-                        activation='relu',            # ReLU activation
-                        solver='adam',                # Optimizer
-                        max_iter=100000,
-                        early_stopping=True,        # Enables early stopping
-                        validation_fraction=0.1,    # Fraction of training data for validation
-                        n_iter_no_change=10,        # Stop if no improvement after 10 epochs
-                        random_state=42
-                        )
-
-gb = GradientBoostingRegressor(
-        n_estimators=1000,        # Number of boosting stages
-        learning_rate=0.001,       # Learning rate (shrinkage)
-        max_depth=34,
-        min_samples_leaf=3,
-        max_features=0.85,             # Maximum depth of each tree
-        subsample=0.9,           # Fraction of samples used for fitting each tree
-        validation_fraction=0.2,
-        n_iter_no_change=10,
-        tol=0.0001,
-        random_state=42
-    )
-
-gb2 = GradientBoostingRegressor(
-        n_estimators=1000,        # Number of boosting stages
-        learning_rate=0.03,       # Learning rate (shrinkage)
-        max_depth=20,
-        min_samples_leaf=1,             # Maximum depth of each tree
-        subsample=0.9,           # Fraction of samples used for fitting each tree
-        validation_fraction=0.2,
-        n_iter_no_change=10,
-        tol=0.0001,
-        random_state=42
-    )
-
-gb3 = GradientBoostingRegressor(
-        n_estimators=1000,        # Number of boosting stages
-        learning_rate=0.03,       # Learning rate (shrinkage)
-        max_depth=20,
-        min_samples_leaf=1,             # Maximum depth of each tree
-        subsample=0.9,           # Fraction of samples used for fitting each tree
-        validation_fraction=0.2,
-        n_iter_no_change=10,
-        tol=0.0001,
-        random_state=42
-    )
-
-svm = SVR(kernel='rbf', C=1.0, epsilon=0.1)
-
+import models as m
+import attention
 
 
 def compare_models(features, target):
@@ -80,11 +20,7 @@ def compare_models(features, target):
     data, labels = dataset.get_data(features, target)
     train_data, test_data, train_labels, test_labels = train_test_split(data, labels, test_size=0.2, random_state=42)
 
-    rf_model = rf.fit(train_data, train_labels)
-    lr_model = lr.fit(train_data, train_labels)
-    svm_model = svm.fit(train_data, train_labels)
-    nn_model = nn.fit(train_data, train_labels)
-    gb_model = gb.fit(train_data, train_labels)
+    nn_model = m.nn_model.fit(train_data, train_labels)
     att_model = attention.regressor.fit(train_data, train_labels)
 
 
@@ -139,7 +75,7 @@ def eval_all(features, targets):
         
     return results
 
-def eval_one(features, targets):
+def eval_one_gb(features, targets):
 
     results = pd.DataFrame(columns=['rmse', 'r2', 'mape'])
 
@@ -151,11 +87,11 @@ def eval_one(features, targets):
         train_data, test_data, train_labels, test_labels = train_test_split(data, labels, test_size=0.2, random_state=42)
 
         
-        model = models.get_gb(t)
+        model = m.get_gb(t)
         model.fit(train_data, train_labels)
         metrics = analysis.evaluate(model, test_data, test_labels)
 
-        original = models.gb_model
+        original = m.gb_model
         original.fit(train_data, train_labels)
         o_metrics = analysis.evaluate(original, test_data, test_labels)
 
@@ -166,8 +102,10 @@ def eval_one(features, targets):
 
         results.loc[t] = [metrics['rmse'],metrics['r2'],metrics['mape']]
 
-        interactions, readable_interactions = shapAnalysis.compute_shap(model, data, t)
-        save_output_csv(f'shapOutputs/{t}', readable_interactions)
+        joblib.dump(model, f'ModelComparison/models/{t}_gb.pkl')
+
+        #interactions, readable_interactions = shapAnalysis.compute_shap(model, data, t)
+        #save_output_csv(f'shapOutputs/{t}', readable_interactions)
 
 
     if len(failed_runs) > 0:
@@ -183,8 +121,10 @@ def save_output_csv(name, df):
 #compare_all = eval_all(ls.target_features_comp, ls.target_labels_1 + ls.target_labels_3)
 #save_output_csv('attention2', compare_all)
 
-shap_inter_results = eval_one(ls.target_features_comp, ls.all_targets)
-save_output_csv('shap_inter_results', shap_inter_results)
+#shap_inter_results = eval_one(ls.target_features_comp, ls.all_targets)
+#save_output_csv('shap_inter_results', shap_inter_results)
+
+eval_one_gb(ls.target_features_comp, ls.all_targets)
 
 
             

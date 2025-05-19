@@ -8,6 +8,9 @@ from skopt import BayesSearchCV
 from skopt.space import Integer, Real
 from sklearn.metrics import r2_score
 import pandas as pd
+from sklearn.model_selection import cross_val_predict, KFold
+from sklearn.metrics import mean_squared_error
+from sklearn.base import clone
 
 
 rf_search_space = {
@@ -44,7 +47,7 @@ def optimize_model(model, search_space, features, target):
         cv=5,
         scoring='r2',
         random_state=42,
-        n_iter=32
+        n_iter=100
         )
 
     opt.fit(data, labels)
@@ -74,5 +77,53 @@ def optimize_all(model, search_space, features, targets, filename):
     with open(f'ModelComparison/modelParameters/{filename}.csv', "w") as file:
         file.write(params.to_csv())
 
-optimize_all(models.gb_model, gb_search_space, ls.target_features_comp, ls.all_targets, 'gb_params')
-#optimize_all(models.gb_model, gb_search_space, ls.target_features_comp, ls.target_labels_3+ls.target_labels_4, 'gb_params')
+def get_top_n_features(model, n, features=ls.target_features_comp):
+    
+    importances = model.feature_importances_
+
+    df = pd.DataFrame({
+        'feature': features,
+        'importance': importances
+    })
+
+    top_features = df.sort_values(by="importance", ascending=False).head(n).reset_index(drop=True)
+    return top_features
+
+def feature_selection(model, full_features, target):
+
+    data, labels = dataset.get_data(full_features, target)
+    baseline_model = clone(model)
+    baseline_model.fit(data, labels)
+    splitter = KFold(n_splits=5, shuffle=True, random_state=24)
+    baseline_pred = cross_val_predict(model, data, labels, cv=splitter)
+    baseline_mse = mean_squared_error(baseline_pred, labels)
+
+    accuracy = 0
+    num_features = 1
+    while accuracy < 0.95:
+        num_features += 1
+        select_features = get_top_n_features(baseline_model, num_features)['feature']
+        select_data, select_labels = dataset.get_data(select_features, target)
+        model.fit(select_data, select_labels)
+        select_pred = cross_val_predict(model, select_data, select_labels, cv=splitter)
+        select_mse = mean_squared_error(select_pred, select_labels)
+        accuracy = select_mse/baseline_mse
+        print(target, num_features, accuracy)
+    
+    return get_top_n_features(baseline_model, num_features)['feature']
+
+def find_all_features_gb(full_features, targets, filename):
+    
+    result = pd.DataFrame(columns=targets, index=range(len(ls.target_features_comp)))
+
+    for target in targets:
+        features = feature_selection(models.get_gb(target), full_features, target)
+        result[target] = features
+    
+    with open(f'ModelComparison/outputs/{filename}_features.csv', "w") as file:
+        file.write(result.to_csv())
+
+    return result
+    
+#optimize_all(models.gb_model, gb_search_space, ls.target_features_comp, ls.all_targets, 'new_gb_params')
+find_all_features_gb(ls.target_features_comp, ls.all_targets, 'low_start')
