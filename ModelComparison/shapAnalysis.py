@@ -2,45 +2,61 @@ import matplotlib.pyplot as plt
 import shap
 import pandas as pd
 import numpy as np
+from sklearn.inspection import PartialDependenceDisplay
 
 def compute_shap(model, data, filename):
 
     explainer = shap.Explainer(model)
-    shap_values = explainer(data)
+    explanation = explainer(data)
+    shap_values = pd.DataFrame(explanation.values, columns=data.columns)
+    shap_values = np.abs(shap_values).sum(axis=0)/len(data)
 
     #bs = shap.plots.beeswarm(shap_values, max_display=30, show=False)
     #bs = shap.summary_plot(shap_values, data.iloc[:2000,:], max_display=30, show=False)
-    #bs = shap.dependence_plot(
-    #("C14,g", "C22:6n-3 DHA,g"),
-    #shap_values, data.iloc[:2000,:], 
-    #show=False)
+    #PartialDependenceDisplay.from_estimator(
+    #    model,
+    #    data,
+    #    [("C18:1,g","C22:6n-3 DHA,g")],
+    #    kind='average',         # PDP (not ICE)
+    #    grid_resolution=500,
+    #    feature_names=data.columns
+    #)
+    #plt.show()
 
     shap_interaction_values = shap.TreeExplainer(model).shap_interaction_values(data)
-    siv_sum = shap_interaction_values.sum(0)
 
-    shap_ivs = pd.DataFrame(siv_sum, columns = data.columns, index = data.columns)
-
-    siv_manip = np.abs(shap_interaction_values).sum(0)
+    siv_manip = np.abs(shap_interaction_values).sum(0)/len(data)
+    manip_ivs = pd.DataFrame(siv_manip, columns = data.columns, index = data.columns)
+    manip_ivs = manip_ivs.copy(deep=True)
     for i in range(siv_manip.shape[0]):
             siv_manip[i,i] = 0
     #siv_manip = siv_manip/siv_manip.sum()
     
-    manip_ivs = pd.DataFrame(siv_manip, columns = data.columns, index = data.columns)
 
     tmp = siv_manip
-    inds = np.argsort(-tmp.sum(0))[:50]
+    inds = np.argsort(-tmp.sum(0))[:40]
     tmp2 = tmp[inds,:][:,inds]
-    plt.figure(figsize=(12,12))
+    plt.figure(figsize=(40,40))
     plt.imshow(tmp2)
-    plt.yticks(range(tmp2.shape[0]), data.columns[inds], rotation=50.4, horizontalalignment="right")
-    plt.xticks(range(tmp2.shape[0]), data.columns[inds], rotation=50.4, horizontalalignment="left")
+    plt.yticks(range(tmp2.shape[0]), data.columns[inds], rotation=50.4, horizontalalignment="right", fontsize=16)
+    plt.xticks(range(tmp2.shape[0]), data.columns[inds], rotation=50.4, horizontalalignment="left", fontsize=16)
     plt.gca().xaxis.tick_top()
 
     plt.tight_layout()
     plt.savefig(f'ModelComparison/outputs/shapOutputs/{filename}_heatmap')
     plt.close()
+    
+    bs = shap.plots.beeswarm(explanation, max_display=40, show=False)
+    plt.tight_layout()
+    plt.savefig(f'ModelComparison/outputs/shapOutputs/{filename}_summary')
+    plt.close()
 
-    return shap_interaction_values, manip_ivs
+
+    
+
+
+
+    return shap_values, manip_ivs
 
 def plot_shap_interaction(shap_interaction_values, feature_1, feature_2, data, label):
     """

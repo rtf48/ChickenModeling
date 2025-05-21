@@ -47,4 +47,4 @@ regressor = KerasRegressor(
 # Train the model
 regressor.fit(X_train, y_train)
 
-#print(analysis.evaluate(regressor, X_val, y_val))
+print(analysis.evaluate(regressor, X_val, y_val))

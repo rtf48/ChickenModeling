@@ -98,19 +98,23 @@ def feature_selection(model, full_features, target):
     baseline_pred = cross_val_predict(model, data, labels, cv=splitter)
     baseline_mse = mean_squared_error(baseline_pred, labels)
 
-    accuracy = 0
-    num_features = 1
-    while accuracy < 0.95:
+    best_accuracy = 0
+    best_num_features = 0
+    num_features = 4
+    while num_features < 50:
         num_features += 1
         select_features = get_top_n_features(baseline_model, num_features)['feature']
         select_data, select_labels = dataset.get_data(select_features, target)
         model.fit(select_data, select_labels)
         select_pred = cross_val_predict(model, select_data, select_labels, cv=splitter)
         select_mse = mean_squared_error(select_pred, select_labels)
-        accuracy = select_mse/baseline_mse
+        accuracy = baseline_mse/select_mse
         print(target, num_features, accuracy)
+        if accuracy > best_accuracy:
+            best_accuracy = accuracy
+            best_num_features = num_features
     
-    return get_top_n_features(baseline_model, num_features)['feature']
+    return get_top_n_features(baseline_model, best_num_features)['feature']
 
 def find_all_features_gb(full_features, targets, filename):
     
@@ -126,4 +130,4 @@ def find_all_features_gb(full_features, targets, filename):
     return result
     
 #optimize_all(models.gb_model, gb_search_space, ls.target_features_comp, ls.all_targets, 'new_gb_params')
-find_all_features_gb(ls.target_features_comp, ls.all_targets, 'low_start')
+find_all_features_gb(ls.target_features_comp, ls.accurate_models, 'filtered_models')

@@ -50,3 +50,6 @@ all_targets = target_labels_1 + target_labels_2 + target_labels_3 + target_label
 not_enough_data = ['Plasma C16:1', 'Plasma C18:1', 'Plasma C18:3', 'Plasma C20:5',
                     'Liver C18:1', 'Plasma MUFA', 'pip mg per dL','tc mg per g','Liver n-6', 'Breast C20:5','Liver C20:5','Liver C18:3 ',]
 
+accurate_models = ['average feed intake g per d','bodyweightgain,g','Breast n-3',
+                   'Breast C18:3 ','Breast C22:6','Thigh PUFA','Thigh n-3',
+                   'Thigh C20:4','Plasma n-6','liver MURF1']

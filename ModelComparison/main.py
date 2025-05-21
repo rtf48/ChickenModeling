@@ -100,9 +100,42 @@ def eval_one_gb(features, targets):
             metrics = o_metrics
             model = original
 
-        results.loc[t] = [metrics['rmse'],metrics['r2'],metrics['mape']]
+        if metrics['r2'] > 0.7 and metrics['mape'] < 0.3:
+            results.loc[t] = [metrics['rmse'],metrics['r2'],metrics['mape']]
 
         joblib.dump(model, f'ModelComparison/models/{t}_gb.pkl')
+
+        shap_values, readable_interactions = shapAnalysis.compute_shap(model, data, t)
+        save_output_csv(f'shapOutputs/{t}_interactions', readable_interactions)
+        save_output_csv(f'shapOutputs/{t}_values', shap_values)
+
+
+
+    if len(failed_runs) > 0:
+        print(f"Training failed for {failed_runs}")
+        
+    return results
+
+def eval_one_rf(features, targets):
+
+    results = pd.DataFrame(columns=['rmse', 'r2', 'mape'])
+
+    failed_runs = []
+
+    for t in targets:
+
+        data, labels = dataset.get_data(features, t)
+        train_data, test_data, train_labels, test_labels = train_test_split(data, labels, test_size=0.2, random_state=42)
+
+        
+        model = m.rf_model
+        model.fit(train_data, train_labels)
+        metrics = analysis.evaluate(model, test_data, test_labels)
+
+        if metrics['r2'] > 0.7 and metrics['mape'] < 0.3:
+            results.loc[t] = [metrics['rmse'],metrics['r2'],metrics['mape']]
+
+        joblib.dump(model, f'ModelComparison/models/{t}_rf.pkl')
 
         #interactions, readable_interactions = shapAnalysis.compute_shap(model, data, t)
         #save_output_csv(f'shapOutputs/{t}', readable_interactions)
@@ -113,18 +146,19 @@ def eval_one_gb(features, targets):
         
     return results
 
-
 def save_output_csv(name, df):
      with open(f'ModelComparison/outputs/{name}.csv', "w") as file:
         file.write(df.to_csv())
 
-#compare_all = eval_all(ls.target_features_comp, ls.target_labels_1 + ls.target_labels_3)
-#save_output_csv('attention2', compare_all)
+compare_all = eval_all(ls.target_features_comp, ls.accurate_models)
+save_output_csv('attention3', compare_all)
 
 #shap_inter_results = eval_one(ls.target_features_comp, ls.all_targets)
 #save_output_csv('shap_inter_results', shap_inter_results)
 
-eval_one_gb(ls.target_features_comp, ls.all_targets)
+#temp = eval_one_gb(ls.target_features_comp, ls.accurate_models)
+#save_output_csv('filtered_metrics', temp)
+#eval_one_gb(ls.target_features_comp, ['Thigh PUFA'])
 
 
             

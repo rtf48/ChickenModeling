@@ -1,0 +1,88 @@
+,average feed intake g per d,"bodyweightgain,g",Breast n-3,Breast C18:3 ,Breast C22:6,Thigh PUFA,Thigh n-3,Thigh C20:4,Plasma n-6,liver MURF1
+0,Vitamin K mg,Thiamin mg,Ca:P ratio,Ca:P ratio,Ca:P ratio,Folic acid mg,"Total Phosphorus,g",Vitamin E IU,"beta-carotene,mg","Zn,mg"
+1,Biotin mg,Folic acid mg,"K,g","K,g","Cl,g","C20:4n-6 ARA,g","C20:4n-6 ARA,g","C20:5n-3 EPA,g","C22:6n-3 DHA,g","C18:2 cis n-6 LA,g"
+2,Riboflavin mg,Vitamin B12 mg ,Vitamin E IU,"C20:4n-6 ARA,g","Na,g","C20:5n-3 EPA,g",Folic acid mg,"Inorganic available P,g","C18:2 cis n-6 LA,g","MUFA,g"
+3,Vitamin D3 IU,Biotin mg,"NDF,g","C20:5n-3 EPA,g",Vitamin D3 IU,Ca:P ratio,Vitamin E IU,"Total Phosphorus,g","C18:1,g","Mg,g"
+4,"Na,g",Niacin mg,"C20:5n-3 EPA,g",Biotin mg,"Threonine,g","Total Phosphorus,g","S,mg","C20:4n-6 ARA,g",Ca:P ratio,"Na,g"
+5,"Met + Cys,g",Start,"Inorganic available P,g",Folic acid mg,Vitamin E IU,,,"S,mg",,"K,g"
+6,"Calcium,g","Met + Cys,g",Folic acid mg,"MUFA,g",Thiamin mg,,,Folic acid mg,,"C18:1,g"
+7,Pyridoxine mg,Cu mg,Thiamin mg,"S,mg",Folic acid mg,,,"K,g",,"n-6 PUFA,g"
+8,"Proline,g","C22:1,g","Valine,g","Tyrosine,g","Total Phosphorus,g",,,"C16:0,g",,"C18:3 cis n-3 ALA,g"
+9,Choline mg,Ca:P ratio,"Proline,g","NDF,g","NDF,g",,,"NFC,g",,"Ash,mg"
+10,"n-3:n-6 ratio,g","Isoleucine,g","Cl,g",Vitamin E IU,"ME, kcal",,,"NDF,g",,Riboflavin mg
+11,"S,mg","Inorganic available P,g","S,mg","Valine,g","S,mg",,,Riboflavin mg,,"Met + Cys,g"
+12,"C24:0,g","Cystine,g","Total Phosphorus,g",Riboflavin mg,"K,g",,,"beta-carotene,mg",,Pyridoxine mg
+13,"Inorganic available P,g","C22:0,g",Vitamin A IU,"Phe + Tyr,g","Ether extract,g",,,"C20:1,g",,"Valine,g"
+14,Vitamin B12 mg ,"C20:4n-6 ARA,g","n-3:n-6 ratio,g",Vitamin B12 mg ,"C16:1,g",,,"PUFA,g",,"PUFA,g"
+15,"NFC,g","n-3:n-6 ratio,g","Zn,mg","Inorganic available P,g","Calcium,g",,,"C22:0,g",,"Histidine,g"
+16,"C14,g","Crude fiber,g","Na,g","Proline,g",Choline mg,,,Pantothenic acid mg,,"Glutamic acid,g"
+17,"Ether extract,g",Vitamin A IU,"C16:0,g","Cl,g","Glutamic acid,g",,,Cu mg,,"CP,g"
+18,"Crude fiber,g",I mg,Biotin mg,"Fe,mg",Vitamin A IU,,,"ME, kcal",,Pantothenic acid mg
+19,"Starch,g","S,mg","Fe,mg","Tryptophan,g","Ash,mg",,,"n-3 PUFA,g",,"beta-carotene,mg"
+20,"Leucine,g","K,g","n-6 PUFA,g","Aspartic acid,g","C22:6n-3 DHA,g",,,"C16:1,g",,Biotin mg
+21,"CP,g","Cl,g","Ether extract,g",I mg,Vitamin B12 mg ,,,"n-6 PUFA,g",,"C20:0,g"
+22,Vitamin A IU,"C18:0,g",I mg,"Arginine,g","Met + Cys,g",,,Vitamin K mg,,"Crude fiber,g"
+23,"Isoleucine,g","C18:1,g","Histidine,g",Vitamin K mg,"ADF,g",,,"C20:0,g",,"n-3 PUFA,g"
+24,"Methionine,g",Vitamin E IU,Pyridoxine mg,"C16:0,g","Mg,g",,,"SFA,g",,"Se,mg"
+25,"Serine,g","Starch,g",Vitamin K mg,Thiamin mg,"beta-carotene,mg",,,,,"Lysine,g"
+26,"Total Phosphorus,g","Zn,mg","Lysine,g",Pantothenic acid mg,"C18:1,g",,,,,"SFA,g"
+27,"C16:0,g","C18:3 cis n-3 ALA,g","C22:6n-3 DHA,g","C24:0,g","Proline,g",,,,,"Threonine,g"
+28,Niacin mg,"Mg,g","Mn,mg","Met + Cys,g","Isoleucine,g",,,,,"C22:6n-3 DHA,g"
+29,Start,"Tryptophan,g","C18:3 cis n-3 ALA,g",Vitamin A IU,"Histidine,g",,,,,"Fe,mg"
+30,"Tryptophan,g","Aspartic acid,g","n-3 PUFA,g","Total Phosphorus,g",Biotin mg,,,,,"C18:0,g"
+31,"PUFA,g",End,"Aspartic acid,g",Niacin mg,Pyridoxine mg,,,,,"C16:0,g"
+32,"Phenylalanine,g","ME, kcal",Riboflavin mg,"Mn,mg","PUFA,g",,,,,"Cystine,g"
+33,Vitamin E IU,"n-3 PUFA,g",Vitamin B12 mg ,"Cystine,g","C18:2 cis n-6 LA,g",,,,,"S,mg"
+34,"Threonine,g",,"C16:1,g","C18:1,g","Serine,g",,,,,"Cl,g"
+35,Cu mg,,"C18:1,g","Glutamic acid,g","C20:0,g",,,,,Ca:P ratio
+36,"Glutamic acid,g",,"Threonine,g","C18:2 cis n-6 LA,g","Mn,mg",,,,,End
+37,"K,g",,"Glycine,g","Histidine,g",Niacin mg,,,,,"NDF,g"
+38,Pantothenic acid mg,,"PUFA,g",End,"Methionine,g",,,,,"ME, kcal"
+39,"Mn,mg",,"beta-carotene,mg","n-3:n-6 ratio,g","Inorganic available P,g",,,,,"Ether extract,g"
+40,Folic acid mg,,"Tryptophan,g","Isoleucine,g","C18:0,g",,,,,"Phe + Tyr,g"
+41,"Arginine,g",,Choline mg,"Se,mg","n-6 PUFA,g",,,,,"Tyrosine,g"
+42,"Histidine,g",,"ME, kcal","NFC,g","C20:1,g",,,,,"Serine,g"
+43,"Se,mg",,"C24:0,g","C20:0,g",Vitamin K mg,,,,,"Proline,g"
+44,"C18:2 cis n-6 LA,g",,,"Ether extract,g","Aspartic acid,g",,,,,"C15:0,g"
+45,,,,"Threonine,g","C18:3 cis n-3 ALA,g",,,,,"C14,g"
+46,,,,"beta-carotene,mg","NFC,g",,,,,"n-3:n-6 ratio,g"
+47,,,,,,,,,,"C16:1,g"
+48,,,,,,,,,,
+49,,,,,,,,,,
+50,,,,,,,,,,
+51,,,,,,,,,,
+52,,,,,,,,,,
+53,,,,,,,,,,
+54,,,,,,,,,,
+55,,,,,,,,,,
+56,,,,,,,,,,
+57,,,,,,,,,,
+58,,,,,,,,,,
+59,,,,,,,,,,
+60,,,,,,,,,,
+61,,,,,,,,,,
+62,,,,,,,,,,
+63,,,,,,,,,,
+64,,,,,,,,,,
+65,,,,,,,,,,
+66,,,,,,,,,,
+67,,,,,,,,,,
+68,,,,,,,,,,
+69,,,,,,,,,,
+70,,,,,,,,,,
+71,,,,,,,,,,
+72,,,,,,,,,,
+73,,,,,,,,,,
+74,,,,,,,,,,
+75,,,,,,,,,,
+76,,,,,,,,,,
+77,,,,,,,,,,
+78,,,,,,,,,,
+79,,,,,,,,,,
+80,,,,,,,,,,
+81,,,,,,,,,,
+82,,,,,,,,,,
+83,,,,,,,,,,
+84,,,,,,,,,,
+85,,,,,,,,,,
+86,,,,,,,,,,
